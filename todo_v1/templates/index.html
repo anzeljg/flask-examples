@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Todo.app &middot; Index{% endblock %}
+
+{% block content %}
+	<div class="p-4 p-md-5">
+		<div class="pb-4">
+			<form method="POST">
+			<div class="input-group">
+				{{ form.hidden_tag() }}
+				{{ form.title(class='form-control rounded-left border-secondary', placeholder='Enter the task that you need to complete.') }}
+				<div class="input-group-append">
+					{{ form.submit(class='btn btn-secondary') }}
+				</div>
+			</div>
+			</form>
+		</div>
+
+		<div class="btn-group pb-2" role="group" aria-label="Filter">
+			<a href="/all" class="btn {% if filter == 'all' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">All</a>
+			<a href="/active" class="btn {% if filter == 'active' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">Active</a>
+			<a href="/completed" class="btn {% if filter == 'completed' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">Completed</a>
+		</div>
+
+		{% if data is defined and count > 0 %}
+			{% for item in data %}
+			<div id="task_{{ item.id }}" class="p-2 my-1 bg-light rounded">
+				<a id="status_{{ item.id }}" class="btn btn-sm {% if item.complete %}btn-secondary{% else %}btn-outline-secondary{% endif %} rounded-circle" href="javascript:setStatus({{ item.id }}, '{{ filter }}')"><span class="fa fa-check"></span></a>
+				<span class="pl-2 text-secondary">{{ item.title }}</span>
+				<a class="btn btn-sm btn-outline-danger rounded-circle pull-right" href="/task/delete/{{ item.id }}"><span class="fa fa-times"></span></a>
+			</div>
+			{% endfor %}
+		{% else %}
+		    {% if filter == 'all' %}
+				<div class="alert alert-success my-1">You have no tasks on your Todo list.</div>
+			{% endif %}
+		    {% if filter == 'active' %}
+				<div class="alert alert-success my-1">You have completed all tasks on your Todo list.</div>
+			{% endif %}
+		    {% if filter == 'completed' %}
+				<div class="alert alert-danger my-1">You still have to complete all tasks on your Todo list.</div>
+			{% endif %}
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+// Function 'setStatus' is called upon clicking every task
+function setStatus(id, filter) {
+	// First AJAX call is issued to the URL /task/status/<id>/<filter>
+	// which is then handled by Flask as this actually is a flask route
+	$.ajax({
+		url: '/task/status/' + id + '/' + filter,
+		success: function(result) {
+			// If AJAX call is successful then handle parts of webpage that
+			// will be changed, without actually reloading the whole webpage
+			if (filter == 'all') {
+				// Toggle CSS classes to reflect status change.
+				// That will flip checkmark circle from gray to white
+				// or the other way if we are on 'All' tasks page.
+				$('#status_' + id).toggleClass('btn-secondary');
+				$('#status_' + id).toggleClass('btn-outline-secondary');
+			}
+			if (filter == 'active' || filter == 'completed') {
+				// Status of the task was changes, so we need to remove whole
+				// task line if we are on 'Active' or 'Completed' page.
+				$('#task_' + id).remove();
+			}
+		}
+	});
+}
+</script>
+{% endblock %}

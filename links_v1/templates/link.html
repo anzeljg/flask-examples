@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Links.app &middot; Shorten URL Address{% endblock %}
+
+{% block content %}
+    <div class="col-md-6 offset-md-3 mt-3">
+        <div class="card">
+            <div class="card-header text-white bg-dark">
+                <h3 class="pt-2">URL Address</h3>
+            </div>
+
+            <div class="card-body">
+                <p>Full URL Address<br />{{ link.long }}</p>
+                <p>Short URL Address<br />{{ link.short_url }}</p>
+				<p><a href="/" class="btn btn-dark">Shorten another</a></p>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
