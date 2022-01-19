@@ -59,8 +59,8 @@ In the second version we will add user management to our blogging web applicatio
 
 In the third version (which does not exist yet) we could expand our blogging web application to allow uploading a photo with any blog post and adding a blog post to a predifined category. Categories could be added, edited and deleted as well. 
 
-- Blog v.1
-- Blog v.2
+- [Blog v.1](/blog_v1/)
+- [Blog v.2](/blog_v2/)
 - Blog v.3
 
 ### Master Chéf
